@@ -15,7 +15,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+import api.views as views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("", views.mediaScout.as_view(), name="mediascout"),
+
+    path("api/user/get", views.userView.get),
+    path("api/user/add", views.userView.add),
+    path("api/user/edit", views.userView.edit),
+    path("api/user/delete", views.userView.delete),
+
+    path("api/auth/login", views.authView.login),
+    path("api/auth/logout", views.authView.logout),
+    path("api/auth/perm", views.authView.permissions),
 ]

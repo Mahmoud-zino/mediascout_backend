@@ -25,7 +25,9 @@ SECRET_KEY = 'django-insecure-$3y1aps(!yi3v+xdo%lf$v^ghe*+5-3efbc40tba=v6k!*zwde
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+]
 
 
 # Application definition
@@ -39,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'api.apps.ApiConfig',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -52,17 +55,25 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ORIGIN_ALLOW_ALL = False
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:5173',
-)
+CORS_ALLOW_CREDENTIALS = True
+CSRF_TRUSTED_ORIGINS  = [
+    'http://127.0.0.1:5173',
+]
+CORS_ORIGIN_WHITELIST = [
+    'http://127.0.0.1:5173',
+]
+
+CORS_ALLOW_HEADERS = [
+    'x-csrftoken',
+    'content-type',
+]
 
 ROOT_URLCONF = 'mediaScout_django.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
