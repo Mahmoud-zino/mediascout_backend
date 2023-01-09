@@ -123,4 +123,4 @@ class authView():
         if request.method != "GET":
             return JsonResponse({"Message": "405 Method Not Allowed"}, status=405)
 
-        return JsonResponse(json.dumps(list(request.user.get_all_permissions())))
+        return JsonResponse(json.dumps(list(request.user.get_all_permissions())), safe=False, status=200)
