@@ -2,6 +2,8 @@
     "cSpell.words": [
         "corsheaders",
         "djongo",
+        "dotenv",
+        "googleapiclient",
         "mediascout"
     ]
 }

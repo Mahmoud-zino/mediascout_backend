@@ -3,9 +3,8 @@ from django.core.validators import URLValidator, MaxLengthValidator, MinLengthVa
 
 # Create your models here.
 class YoutubeData(models.Model):
-    id = models.CharField(primary_key=True, max_length=24, null=False, default=None)
+    channel_id = models.CharField(max_length=24, null=False, default=None)
     url = models.URLField(validators=[URLValidator], null=False, default=None)
-    imageUrl = models.URLField(validators=[URLValidator], null=False, default=None)
 
 class User(models.Model):
     name = models.CharField(max_length=50, null=False, default=None, validators=[

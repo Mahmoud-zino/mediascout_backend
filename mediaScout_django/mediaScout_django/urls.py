@@ -21,12 +21,15 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("", views.mediaScout.as_view(), name="mediascout"),
 
+    path("api/auth/login", views.authView.login),
+    path("api/auth/logout", views.authView.logout),
+    path("api/auth/perm", views.authView.permissions),
+
     path("api/user/get", views.userView.get),
     path("api/user/add", views.userView.add),
     path("api/user/edit", views.userView.edit),
     path("api/user/delete", views.userView.delete),
 
-    path("api/auth/login", views.authView.login),
-    path("api/auth/logout", views.authView.logout),
-    path("api/auth/perm", views.authView.permissions),
+    path("api/user/youtube/get/<int:user_id>", views.youtubeView.get),
+    path("api/user/youtube/mutate/<int:user_id>", views.youtubeView.mutate),
 ]
