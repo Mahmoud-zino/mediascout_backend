@@ -158,16 +158,18 @@ class youtubeView():
 
         try:
             params = json.loads(request.body)
-            url = params.get('url')
-            # TODO: Get channel id from url
-
+            channel_id = params.get('channel_id')
         except:
             return JsonResponse({"Message":"400 Bad request"},status=400)
 
-        channels_response = service.channels().list(
-        forUsername=url,
-        part="id").execute()
-        
-        return JsonResponse({"Message": channels_response}, status=200)
+        try:
+            request = service.channels().list(id=channel_id, part='snippet')
+            response = request.execute()
+            if 'items' in response:
+                return JsonResponse({"Message":channel_id},status=200)
+            else:
+                return JsonResponse({"Message":"channel_id invalid"},status=200)
+        except:
+            return JsonResponse({"Message":"400 Bad request"},status=400)
 
         
