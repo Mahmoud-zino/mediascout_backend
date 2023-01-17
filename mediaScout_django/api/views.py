@@ -153,23 +153,22 @@ class youtubeView():
 
         try:
             user = User.objects.get(id=user_id)
-        except User.DoesNotExist:
-            return JsonResponse({"Message":"400 Bad request"},status=400)
-
-        try:
+            
             params = json.loads(request.body)
             channel_id = params.get('channel_id')
-        except:
-            return JsonResponse({"Message":"400 Bad request"},status=400)
 
-        try:
             request = service.channels().list(id=channel_id, part='snippet')
             response = request.execute()
             if 'items' in response:
-                return JsonResponse({"Message":channel_id},status=200)
+                if(not user.youtube):
+                    user.youtube = YoutubeData(channel_id = channel_id)
+                else:
+                    user.youtube.channel_id = channel_id
+                    
+                user.youtube.save()
+                user.save()
+                return JsonResponse({"channel_id":channel_id},status=200)
             else:
                 return JsonResponse({"Message":"channel_id invalid"},status=200)
-        except:
+        except User.DoesNotExist:
             return JsonResponse({"Message":"400 Bad request"},status=400)
-
-        
