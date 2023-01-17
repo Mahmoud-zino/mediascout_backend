@@ -3,7 +3,7 @@ FROM python:3.9-alpine
 
 ENV PYTHONUNBUFFERED 1
 
-# Liebherr certificate
+# Liebherr certificate (important for pip)
 COPY ./cacert.crt /usr/local/share/ca-certificates/cacert.crt
 
 ENV PIP_CERT /usr/local/share/ca-certificates/cacert.crt
@@ -11,10 +11,8 @@ ENV PIP_CERT /usr/local/share/ca-certificates/cacert.crt
 RUN apk --no-cache add ca-certificates \
   && update-ca-certificates
 
-# Create folder code
 RUN mkdir /code
 WORKDIR /code
-
 
 RUN /usr/local/bin/python -m pip install --upgrade pip
 
