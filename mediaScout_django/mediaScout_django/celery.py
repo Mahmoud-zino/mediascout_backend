@@ -7,7 +7,7 @@ from api.tasks import test_task
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mediaScout_django.settings')
 
-app = Celery('mediaScout_django')
+app = Celery('mediaScout_django', broker='amqp://guest:guest@rabbitmq:5672/')
 
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
