@@ -30,6 +30,7 @@ urlpatterns = [
     path("api/user/edit", views.userView.edit),
     path("api/user/delete", views.userView.delete),
 
+    path("api/user/youtube/check/<str:channel_id>", views.youtubeView.check),
     path("api/user/youtube/get/<int:user_id>", views.youtubeView.get),
     path("api/user/youtube/mutate/<int:user_id>", views.youtubeView.mutate),
 ]
