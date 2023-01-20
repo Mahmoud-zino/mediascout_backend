@@ -3,7 +3,7 @@ version: '3.8'
 services:
   celery:
     build: .
-    command: celery -A mediaScout_django worker --beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    command: celery -A mediaScout_django worker --beat --loglevel=info
     volumes:
       - .:/code
     depends_on:
