@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from googleapiclient.discovery import build
 from pytube import YouTube
 
+
 load_dotenv()
 service = build('youtube', 'v3', developerKey=os.getenv('API_KEY'))
 
@@ -18,10 +19,12 @@ def get_channel_upload_playlist(channel_id):
     channel_response = channel_request.execute()
     return channel_response["items"][0]["contentDetails"]["relatedPlaylists"]["uploads"]
 
-def get_all_new_channel_videos(channel_id: str, saved_videos: set):
+def get_all_new_channel_videos(channel_id: str, existing_video_ids: set):
     next_page_token = None
     fetched_videos = set()
+    
     while True:
+
         request = service.playlistItems().list(
             part="contentDetails",
             playlistId=get_channel_upload_playlist(channel_id),
@@ -29,24 +32,28 @@ def get_all_new_channel_videos(channel_id: str, saved_videos: set):
             pageToken=next_page_token,
             quotaUser=os.getenv('QUOTA_USER'), 
         )
+
         response = request.execute()
         video_ids = [item["contentDetails"]["videoId"] for item in response["items"]]
+
         batch = service.new_batch_http_request()
         for video_id in video_ids:
             request = service.videos().list(
-                part="liveStreamingDetails", # Get liveStreamingDetails to filter out scheduled/live live streams
+                # Get liveStreamingDetails to filter out scheduled/live live streams
+                part="liveStreamingDetails", 
                 id=video_id,
                 quotaUser=os.getenv('QUOTA_USER'),
             )
-            # Use http batches to only send 1 request with multiply API calls
-            batch.add(request, callback=lambda request_id, response, exception: handle_response(request_id, response, exception, saved_videos, fetched_videos))
+            # Use http batches to only send 1 request with multiple API calls
+            batch.add(request, callback=lambda _, response, exception: handle_response(response, exception, existing_video_ids, fetched_videos))
         batch.execute()
+
         if 'nextPageToken' not in response:
             break
         next_page_token = response['nextPageToken']
     return fetched_videos
 
-def handle_response(request_id, response, exception, saved_videos, fetched_videos):
+def handle_response(response, exception, saved_videos, fetched_videos):
     if exception is not None:
         print (exception)
     else:
@@ -72,15 +79,16 @@ def download_youtube_video(video_id):
 
     video_data = f'video_data_({yt.video_id}).mp4'
     video_info = f'video_info_({yt.video_id}).json'
-    archive = f'archive_({yt.video_id}).zip'
-    data_path = f'{os.getcwd()}{os.getenv("DATA_PATH")}'
+    archive = f'{yt.video_id}.zip'
+    data_path = f'{os.path.dirname(os.path.abspath(__file__))}{os.getenv("DATA_PATH")}'
 
     # Check if directory exists or not
     if not os.path.exists(data_path):
         os.makedirs(data_path)
 
     # Change the current working directory
-    os.chdir(data_path)
+    if os.getcwd() != data_path:
+        os.chdir(data_path)
 
     # Download video
     stream.download(filename=video_data)

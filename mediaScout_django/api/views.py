@@ -11,6 +11,7 @@ from googleapiclient.discovery import build
 
 from api.models import YoutubeData
 from api.youtube import youtube_channel_id_valid
+from api.tasks import update_youtube_videos, download_new_videos
 
 load_dotenv()
 service = build('youtube', 'v3', developerKey=os.getenv('API_KEY'))
@@ -181,3 +182,15 @@ class youtubeView():
             return JsonResponse({"channel_id":channel_id},status=200)
         except User.DoesNotExist:
             return JsonResponse({"Message":"400 Bad request"},status=400)
+
+#TODO: delete before deploying
+class TestAPI():
+    def test_update_youtube_videos_task(request):
+        res = update_youtube_videos()
+        return JsonResponse({"Message": res},status=200)
+
+    def test_download_new_videos(request):
+        res = download_new_videos(set({'Bdk70rE6MJg', 'wf4V-BFP3Cg'}))
+        return JsonResponse({"Message": res},status=200)
+
+

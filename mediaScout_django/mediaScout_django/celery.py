@@ -3,7 +3,7 @@ import os
 from celery import Celery
 from celery.schedules import crontab
 
-from api.tasks import test_task
+from api.tasks import update_youtube_videos
 
 # load django default settings
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mediaScout_django.settings')
@@ -19,4 +19,4 @@ app.autodiscover_tasks()
 # configure tasks
 @app.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
-    sender.add_periodic_task(10.0, test_task, name='add every 10')
+    sender.add_periodic_task(60.0, update_youtube_videos, name='update_youtube_videos_every_60')

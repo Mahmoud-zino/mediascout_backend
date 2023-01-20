@@ -8,10 +8,10 @@ class YoutubeData(models.Model):
 
 
 class YoutubeVideo(models.Model):
-    video_id = models.CharField(max_length=11, null=False, default=None),
-    title = models.CharField(max_length=100, null=False, default=None),
-    length = models.IntegerField(null=False, default=None),
-    publish_date = models.DateTimeField(null=False, default=None)
+    video_id = models.CharField(max_length=11, null=False, default=None)
+    title = models.CharField(max_length=100, null=True, default=None)
+    length = models.IntegerField(null=True, default=None)
+    publish_date = models.DateTimeField(null=True, default=None)
     youtube_data = models.ForeignKey(YoutubeData, on_delete=models.CASCADE)
 
 
