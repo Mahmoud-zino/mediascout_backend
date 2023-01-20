@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 from googleapiclient.discovery import build
 
 from api.models import YoutubeData
+from api.youtube import youtube_channel_id_valid
 
 load_dotenv()
 service = build('youtube', 'v3', developerKey=os.getenv('API_KEY'))
@@ -166,24 +167,17 @@ class youtubeView():
             params = json.loads(request.body)
             channel_id = params.get('channel_id')
 
-            if(youtube_channel_id_valid(channel_id)):
-                if(not user.youtube):
-                    user.youtube = YoutubeData(channel_id = channel_id)
-                else:
-                    user.youtube.channel_id = channel_id
-                    
-                user.youtube.save()
-                user.save()
-                return JsonResponse({"channel_id":channel_id},status=200)
-            else:
+            if(not youtube_channel_id_valid(channel_id)):
                 return JsonResponse({"Message":"channel_id invalid"},status=200)
+
+            if(user.youtube):
+                user.youtube.channel_id = channel_id
+            else:
+                user.youtube = YoutubeData(channel_id = channel_id)
+                
+            user.youtube.save()
+            user.save()
+
+            return JsonResponse({"channel_id":channel_id},status=200)
         except User.DoesNotExist:
             return JsonResponse({"Message":"400 Bad request"},status=400)
-
-def youtube_channel_id_valid(channel_id):
-    request = service.channels().list(id=channel_id, part='snippet')
-    response = request.execute()
-    if 'items' in response:
-        return True
-    else:
-        return False

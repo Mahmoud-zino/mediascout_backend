@@ -110,3 +110,11 @@ def get_youtube_video_info(yt: YouTube):
         'length': yt.length
     }
     return video_info
+
+def youtube_channel_id_valid(channel_id):
+    request = service.channels().list(id=channel_id, part='snippet')
+    response = request.execute()
+    if 'items' in response:
+        return True
+    else:
+        return False
