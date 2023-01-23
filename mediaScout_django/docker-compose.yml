@@ -6,6 +6,7 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    restart: unless-stopped
   django:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
@@ -17,9 +18,9 @@ services:
       - "8000:8000"
     depends_on:
       - rabbitmq
+    restart: unless-stopped
   celery:
     build: .
-    restart: unless-stopped
     command: celery -A mediaScout_django worker --beat --loglevel=info
     environment:
       - DJANGO_SETTINGS_MODULE=mediaScout_django.settings
@@ -27,3 +28,4 @@ services:
       - .:/code
     depends_on:
       - django
+    restart: unless-stopped
