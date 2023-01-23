@@ -4,6 +4,9 @@ from celery import Celery
 from celery.schedules import crontab
 
 from api.tasks import update_youtube_videos
+from django.conf import settings
+from celery import Celery
+
 
 # load django default settings
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mediaScout_django.settings')

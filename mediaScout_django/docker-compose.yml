@@ -1,24 +1,29 @@
 version: '3.8'
 
 services:
-  celery:
-    build: .
-    command: celery -A mediaScout_django worker --beat --loglevel=info
-    volumes:
-      - .:/code
-    depends_on:
-      - django
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
   django:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
+    environment:
+      - DJANGO_SETTINGS_MODULE=mediaScout_django.settings
     volumes:
       - .:/code
     ports:
       - "8000:8000"
     depends_on:
       - rabbitmq
-  rabbitmq:
-    image: rabbitmq:3-management
-    ports:
-      - "5672:5672"
-      - "15672:15672"
+  celery:
+    build: .
+    restart: unless-stopped
+    command: celery -A mediaScout_django worker --beat --loglevel=info
+    environment:
+      - DJANGO_SETTINGS_MODULE=mediaScout_django.settings
+    volumes:
+      - .:/code
+    depends_on:
+      - django
