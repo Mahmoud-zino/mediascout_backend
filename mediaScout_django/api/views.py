@@ -12,6 +12,7 @@ from googleapiclient.discovery import build
 from api.models import YoutubeData
 from api.youtube import youtube_channel_id_valid
 from api.tasks import update_youtube_videos, download_new_videos
+from api.models import YoutubeVideo
 
 load_dotenv()
 service = build('youtube', 'v3', developerKey=os.getenv('API_KEY'))
@@ -151,9 +152,9 @@ class youtubeView():
             return JsonResponse({"Message":"400 Bad request"},status=400)
 
         if user.youtube is None:
-            return JsonResponse({ "channel_id":"" }, status=200)
+            return JsonResponse({ "id": "", "channel_id":"" }, status=200)
 
-        return JsonResponse({ "channel_id": user.youtube.channel_id }, status=200)
+        return JsonResponse({ "id": user.youtube.id, "channel_id": user.youtube.channel_id }, status=200)
 
     def mutate(request, user_id):
         if request.method != "POST":
@@ -182,6 +183,18 @@ class youtubeView():
             return JsonResponse({"channel_id":channel_id},status=200)
         except User.DoesNotExist:
             return JsonResponse({"Message":"400 Bad request"},status=400)
+
+class videoView():
+    def get(request, youtube_id):
+        if request.method != "GET":
+            return JsonResponse({"Message": "405 Method Not Allowed"}, status=405)
+
+        if not YoutubeData.objects.filter(id=youtube_id):
+            return JsonResponse({"Message":"400 Bad request"},status=400)
+
+        videos = YoutubeVideo.objects.filter(youtube_data_id=youtube_id)
+
+        return JsonResponse({ "videos": list(videos.values()) }, status=200)
 
 #TODO: delete before deploying
 class TestAPI():

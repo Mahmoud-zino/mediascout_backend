@@ -33,6 +33,7 @@ urlpatterns = [
     path("api/user/youtube/check/<str:channel_id>", views.youtubeView.check),
     path("api/user/youtube/get/<int:user_id>", views.youtubeView.get),
     path("api/user/youtube/mutate/<int:user_id>", views.youtubeView.mutate),
+    path("api/user/youtube/get/<int:youtube_id>/videos", views.videoView.get),
 
     #TODO: delete before deploying
     path("api/test/update_youtube_videos", views.TestAPI.test_update_youtube_videos_task),
