@@ -55,13 +55,12 @@ def get_all_new_channel_videos(channel_id: str, existing_video_ids: set):
 
 def handle_response(response, exception, saved_videos, fetched_videos):
     if exception is not None:
-        print (exception)
-    else:
-        for item in response["items"]:
-            if "liveStreamingDetails" not in item: # Filter out live streams
-                video_id = item["id"]
-                if video_id not in saved_videos:
-                    fetched_videos.add(video_id)
+        raise exception
+        
+    for item in response["items"]:
+        # Filter out live streams
+        if "liveStreamingDetails" not in item and item["id"] not in saved_videos:
+            fetched_videos.add(item["id"])
 
 def download_youtube_video(video_id):
     yt = YouTube(f"https://www.youtube.com/watch?v={video_id}")
@@ -122,7 +121,4 @@ def get_youtube_video_info(yt: YouTube):
 def youtube_channel_id_valid(channel_id):
     request = service.channels().list(id=channel_id, part='snippet')
     response = request.execute()
-    if 'items' in response:
-        return True
-    else:
-        return False
+    return 'items' in response

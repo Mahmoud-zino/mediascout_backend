@@ -1,8 +1,6 @@
 from django.db import models
 from django.core.validators import URLValidator, MaxLengthValidator, MinLengthValidator
 
-# Create your models here.
-
 class YoutubeData(models.Model):
     channel_id = models.CharField(max_length=24, null=False, default=None)
 
