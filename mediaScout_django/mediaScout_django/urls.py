@@ -37,9 +37,5 @@ urlpatterns = [
     path("api/user/youtube/get/<int:youtube_id>/videos", views.videoView.get),
     path("api/user/youtube/videos/download/<int:video_id>", views.videoView.download),
     path("api/user/youtube/get/<int:youtube_id>/videos/download_all", views.videoView.download_all),
-
-    #TODO: delete before deploying
-    path("api/test/update_youtube_videos", views.TestAPI.test_update_youtube_videos_task),
-    path("api/test/test_download_new_videos", views.TestAPI.test_download_new_videos),
 ]
 

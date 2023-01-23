@@ -241,16 +241,3 @@ class videoView():
         response = StreamingHttpResponse(in_memory_zip, content_type='application/zip')
         response['Content-Disposition'] = f'attachment; filename="{youtube_data.channel_id}.zip"'
         return response
-
-
-#TODO: delete before deploying
-class TestAPI():
-    def test_update_youtube_videos_task(request):
-        res = update_youtube_videos()
-        return JsonResponse({"Message": res},status=200)
-
-    def test_download_new_videos(request):
-        res = download_new_videos(set({'Bdk70rE6MJg', 'wf4V-BFP3Cg'}))
-        return JsonResponse({"Message": res},status=200)
-
-

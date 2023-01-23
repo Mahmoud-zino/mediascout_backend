@@ -1,7 +1,5 @@
-import os
 import django
 from celery import shared_task
-from django.http import StreamingHttpResponse
 from pytube import YouTube
 
 
