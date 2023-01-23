@@ -29,7 +29,7 @@ class videoView():
         file_path = f'{settings.BASE_DIR}/api/{os.getenv("DATA_PATH")}/{video.video_id}.zip'
 
         response = StreamingHttpResponse(open(file_path, 'rb'))
-        response['Content-Disposition'] = f'attachment; filename="{video.title}.zip"'
+        response['Content-Disposition'] = f'attachment; filename="{video.video_id}.zip"'
         response['Content-Type'] = 'application/zip'
 
         return response
