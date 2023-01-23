@@ -3,6 +3,7 @@ import os
 from zipfile import ZipFile
 from django.http import JsonResponse, StreamingHttpResponse
 from api.models import YoutubeData, YoutubeVideo
+from django.conf import settings
 
 class videoView():
     def get(request, youtube_id):
@@ -25,7 +26,7 @@ class videoView():
         except YoutubeVideo.DoesNotExist:
             return JsonResponse({"Message":"400 Bad request"},status=400)
 
-        file_path = f'{os.path.dirname(os.path.abspath(__file__))}{os.getenv("DATA_PATH")}/{video.video_id}.zip'
+        file_path = f'{settings.BASE_DIR}/api/{os.getenv("DATA_PATH")}/{video.video_id}.zip'
 
         response = StreamingHttpResponse(open(file_path, 'rb'))
         response['Content-Disposition'] = f'attachment; filename="{video.title}.zip"'
@@ -42,7 +43,7 @@ class videoView():
         except YoutubeVideo.DoesNotExist:
             return JsonResponse({"Message":"400 Bad request"},status=400)
 
-        folder_path = f'{os.path.dirname(os.path.abspath(__file__))}{os.getenv("DATA_PATH")}/'
+        folder_path = f'{settings.BASE_DIR}/api/{os.getenv("DATA_PATH")}/'
            
         videos = YoutubeVideo.objects.filter(youtube_data_id=youtube_id)
 
