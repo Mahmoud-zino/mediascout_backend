@@ -26,7 +26,7 @@ def update_youtube_videos():
             youtube_record.channel_id, existing_video_ids)
 
         if not new_video_ids:
-            return
+            continue
 
         for video_id in new_video_ids:
             yt = YouTube(
