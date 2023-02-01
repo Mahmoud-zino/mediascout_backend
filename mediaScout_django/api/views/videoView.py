@@ -28,6 +28,9 @@ class videoView():
 
         file_path = f'{settings.BASE_DIR}/api/{os.getenv("DATA_PATH")}/{video.video_id}.zip'
 
+        if not os.path.exists(file_path):
+            return JsonResponse({"Message":"Video was not found!"},status=206)
+
         response = StreamingHttpResponse(open(file_path, 'rb'))
         response['Content-Disposition'] = f'attachment; filename="{video.video_id}.zip"'
         response['Content-Type'] = 'application/zip'
